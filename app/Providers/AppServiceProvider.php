@@ -19,6 +19,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        // RODAR MIGRATIONS
+        $this->loadMigrationsFrom([
+            database_path() . '/migrations/EstruturaLaravel',
+            database_path() . '/migrations',
+            database_path() . '/migrations/populate',
+        ]);
     }
 }

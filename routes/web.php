@@ -5,6 +5,9 @@ use App\Http\Controllers\HomeController;
 use App\Http\Livewire\Dashboard;
 use App\Http\Livewire\Projeto\CriarProjeto;
 use App\Http\Livewire\Projeto\VerProjeto;
+use App\Http\Livewire\Utilizador\CriarUtilizadores;
+use App\Http\Livewire\Utilizador\EditarUtilizadores;
+use App\Http\Livewire\Utilizador\VerUtilizadores;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [LoginController::class, 'index']);
@@ -25,5 +28,11 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/projetos', VerProjeto::class)->name('projetos');
     Route::get('/projetos/criar', CriarProjeto::class)->name('projetos.criar');
     Route::get('/projetos/editar/{id}', CriarProjeto::class)->name('projetos.editar');
+
+    //ROTAS UTILIZADORES
+    Route::get('/utilizadores', VerUtilizadores::class)->name('utilizadores');
+    Route::get('/utilizadores/criar', CriarUtilizadores::class)->name('utilizadores.criar');
+    Route::get('/utilizadores/edit/{id}', EditarUtilizadores::class)->name('utilizadores.editar');
+
     
 });

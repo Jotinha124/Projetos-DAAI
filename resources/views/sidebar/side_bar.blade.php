@@ -20,7 +20,7 @@
         </li>
         @if (Session::get('s_admin') == true)
             <li>
-                <a href="{{-- route('utilizadores') --}}" class="nav-link text-white">
+                <a href="{{ route('utilizadores') }}" class="nav-link text-white">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                         class="bi bi-file-person" viewBox="0 0 16 16">
                         <path

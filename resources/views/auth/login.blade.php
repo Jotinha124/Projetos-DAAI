@@ -7,13 +7,7 @@
                 <div class="card">
                     <div class="card-header">{{ __('Login') }}</div>
                     <div class="card-body">
-                        @if (session()->has('mensagem_erro'))
-                            <div>
-                                <div class="alert alert-danger" role="alert">
-                                    {{ session('mensagem_erro') }}
-                                </div>
-                            </div>
-                        @endif
+                        <x-alertas />
                         <form method="POST" action="{{ route('login') }}">
                             @csrf
 

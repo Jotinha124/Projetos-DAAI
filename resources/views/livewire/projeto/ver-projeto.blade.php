@@ -1,3 +1,10 @@
-<div>
-    {{-- Knowing others is intelligence; knowing yourself is true wisdom. --}}
-</div>
+@section('titulo')
+    Ver Projetos
+@endsection
+
+<table>
+    <thead>
+        <td>
+        </td>
+    </thead>
+</table>

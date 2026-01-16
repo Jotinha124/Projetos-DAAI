@@ -4,6 +4,8 @@
 <div>
     <x-breadcrumb layer1="Utilizadores" layer2="Ver Utilizadores" layer1route="utilizadores" />
 
+    <x-alertas />
+
     <a class="btn btn-primary" href="{{ route('utilizadores.criar') }}">Criar Utilizador</a>
 
     <table class="table">
@@ -16,29 +18,38 @@
         </thead>
         <tbody>
             @forelse ($Utilizadores as $item)
-                <td>
-                    <div class="btn-group" role="group">
-                        <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown"
-                            aria-expanded="false">
-                            Ações
-                        </button>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item"
-                                    href="{{ route('utilizadores.editar', ['id' => $item->id]) }}">Editar</a></li>
-                            <li><a class="dropdown-item" onclick="">Apagar</a></li>
-                        </ul>
-                    </div>
-                </td>
-                <td>{{ $item->nome }}</td>
-                <td>{{ $item->email }}</td>
-                <td>
-                    @if ($item->admin == 1)
-                        <span class="badge text-bg-success">Sim</span>
-                    @else
-                        <span class="badge text-bg-danger">Não</span>
-                    @endif
-                </td>
-                <td>{{ $item->tipo_utilizador }}</td>
+                <tr>
+                    <td>
+                        <div class="btn-group" role="group">
+                            <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown"
+                                aria-expanded="false">
+                                Ações
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item"
+                                        href="{{ route('utilizadores.editar', ['id' => $item->id]) }}">Editar</a></li>
+                                <li><a class="dropdown-item"
+                                        onclick="return confirm('Tem a certeza que deseja apagar este utilizador?')"
+                                        wire:click="apagarUtilizador({{ $item->id }})">Apagar</a>
+                                </li>
+                                <hr>
+                                <li><a class="dropdown-item"
+                                        wire:click="resetarPassword({{ $item->id }})">Resetar Password</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </td>
+                    <td>{{ $item->nome }}</td>
+                    <td>{{ $item->email }}</td>
+                    <td>
+                        @if ($item->admin == 1)
+                            <span class="badge text-bg-success">Sim</span>
+                        @else
+                            <span class="badge text-bg-danger">Não</span>
+                        @endif
+                    </td>
+                    <td>{{ $item->tipo_utilizador }}</td>
+                </tr>
             @empty
                 <td colspan="4">Não tem dados</td>
             @endforelse
@@ -46,3 +57,12 @@
     </table>
 
 </div>
+@section('script')
+    <script>
+        function apagarUtilizador(id) {
+            if (confirm('Tem a certeza que deseja apagar este utilizador?')) {
+                Livewire.dispatch('apagarUtilizador', id);
+            }
+        }
+    </script>
+@endsection

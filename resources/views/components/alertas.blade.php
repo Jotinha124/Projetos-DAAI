@@ -6,4 +6,11 @@
             </div>
         </div>
     @endif
+        @if (session()->has('mensagem'))
+        <div>
+            <div class="alert alert-success" role="alert">
+                {{ session('mensagem') }}
+            </div>
+        </div>
+    @endif
 </div>

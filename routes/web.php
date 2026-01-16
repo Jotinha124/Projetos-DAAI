@@ -32,7 +32,7 @@ Route::group(['middleware' => 'auth'], function () {
     //ROTAS UTILIZADORES
     Route::get('/utilizadores', VerUtilizadores::class)->name('utilizadores');
     Route::get('/utilizadores/criar', CriarUtilizadores::class)->name('utilizadores.criar');
-    Route::get('/utilizadores/edit/{id}', EditarUtilizadores::class)->name('utilizadores.editar');
+    Route::get('/utilizadores/editar/{id}', EditarUtilizadores::class)->name('utilizadores.editar');
 
     
 });

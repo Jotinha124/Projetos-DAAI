@@ -24,7 +24,6 @@ class CriarUtilizadores extends Component
         ];
     }
 
-    //NÃO ESTA A MOSTRAR POR CAUSA DO ESTILO
     public function messages()
     {
         return [
@@ -63,6 +62,8 @@ class CriarUtilizadores extends Component
             //ENVIAR EMAIL COM PASSWORD
             
             session()->flash('mensagem','Utilizador criado com sucesso');
+
+            return redirect('utilizadores');
         } catch (Exception $e) {
             session()->flash('mensagem_erro', 'Erro a inserir utilizador');
         }

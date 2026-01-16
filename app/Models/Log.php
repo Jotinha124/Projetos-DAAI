@@ -11,7 +11,7 @@ class Log extends Model
     public $fillable = [
         'data',
         'id_projeto',
-        'id_tecnico_apoio',
+        'id_user',
         'id_status'
     ];
 }

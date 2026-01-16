@@ -9,6 +9,6 @@ class TipoProjeto extends Model
     public $table = "tipo_projeto";
     
     public $fillable = [
-        'nome'
+        'tipoprojeto'
     ];
 }

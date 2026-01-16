@@ -9,9 +9,10 @@ class Anexo extends Model
     public $table = "anexo";
 
     public $fillable = [
+        'nome_anexo',
         'anexo',
         'id_projeto',
         'data',
-        'id_tecnico_apoio'
+        'id_user'
     ];
 }

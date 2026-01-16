@@ -20,7 +20,7 @@ return new class extends Migration
             $table->float('orcamento');
             $table->boolean('verificadopresidencia')->default(false);
 
-            $table->unsignedBigInteger('id_investigador');
+            $table->unsignedBigInteger('id_investigador')->nullable();
 
             $table->unsignedBigInteger('id_financiamento');
 
@@ -33,8 +33,8 @@ return new class extends Migration
             $table->boolean('entidadesexternas')->default(false);
 
             $table->date('data');
-            $table->date('data_decisao');
-            $table->date('data_fecho');
+            $table->date('data_decisao')->nullable();
+            $table->date('data_fecho')->nullable();
 
 
             $table->foreign('id_investigador')

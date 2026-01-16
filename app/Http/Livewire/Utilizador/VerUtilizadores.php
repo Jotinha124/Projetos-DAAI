@@ -2,11 +2,26 @@
 
 namespace App\Http\Livewire\Utilizador;
 
+use App\Models\User;
 use Illuminate\Support\Facades\DB;
+use Livewire\Attributes\On;
 use Livewire\Component;
 
 class VerUtilizadores extends Component
 {
+    public function apagarUtilizador($id)
+    {
+        User::find($id)->delete();
+        session()->flash('mensagem','Utilizador apagado com sucesso');
+    }
+
+    public function resetarPassword($id)
+    {
+        $Utilizador = User::find($id);
+
+        //ENVIAR EMAIL
+    }
+
     public function render()
     {
         $Utilizadores = DB::table('users')

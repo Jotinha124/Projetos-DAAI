@@ -12,7 +12,6 @@ class Projeto extends Model
         'projeto',
         'verificado',
         'sumario',
-        'documento',
         'orcamento',
         'verificadopresidencia',
         'id_investigador',

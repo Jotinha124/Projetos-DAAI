@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('nome_anexo');
             $table->string('anexo');
             $table->date('data');
+            $table->string('observacao')->nullable();
 
             $table->unsignedBigInteger('id_projeto');
 

@@ -6,7 +6,52 @@
 
     <x-alertas />
 
-    <a class="btn btn-primary" href="{{ route('projetos.criar') }}">Criar Projeto</a>
+    <div wire:ignore.self class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">
+                        Projeto [{{ $NomeProjeto }}]</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div wire:loading>
+                        A carregar ...
+                    </div>
+                    <br>
+                    Sumario: {{ $Sumario }} <br>
+                    Orçamento: {{ $Orcamento }} € <br>
+                    Tipo Projeto: {{ $tipoProjeto }} <br>
+                    Financiamento: {{ $Financiamento }} <br>
+                    Entidades Externas: {{ $entidadesExternas ? 'Sim' : 'Não' }} <br>
+                    <hr>
+                    <label class="form-label">Técnico de Apoio:</label>
+                    <select class="form-select @error('Tecnico') is-invalid @enderror" id="validationDefault04"
+                        wire:model="Tecnico" required>
+                        <option selected value="">Escolha um técnico...</option>
+                        @forelse($tecnicos as $item)
+                            <option value="{{ $item->id }}">{{ $item->nome }}</option>
+                        @empty
+                            <option value="">Não existem técnicos disponíveis</option>+
+                        @endforelse
+                    </select>
+                    @error('Tecnico')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                    @enderror
+                </div>
+                <div class="modal-footer">
+                    <a type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</a>
+                    <a type="button" class="btn btn-primary" wire:click="addTecnico('{{ Crypt::encrypt($id) }}')">Atribuir</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if (Session::get('s_idTipoUtilizador') == env('TIPO_INVESTIGADOR'))
+        <a class="btn btn-primary" href="{{ route('projetos.criar') }}">Criar Projeto</a>
+    @endif
 
     <table class="table">
         <thead>
@@ -18,6 +63,11 @@
             <td>Verificado</td>
             <td>Tipo Projeto</td>
             <td>Status</td>
+            @if (Session::get('s_idTipoUtilizador') == env('TIPO_TECNICO'))
+                <td>Investigador</td>
+            @else
+                <td>Técnico de Apoio</td>
+            @endif
         </thead>
         <tbody>
             @forelse ($projetos as $item)
@@ -29,17 +79,32 @@
                                 Ações
                             </button>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item"
-                                        href="{{ route('projetos.editar', ['id' => $item->id]) }}">Editar</a></li>
-                                <li><a class="dropdown-item"
-                                        onclick="return confirm('Tem a certeza que deseja apagar este utilizador?')"
-                                        wire:click="apagarUtilizador({{ $item->id }})">Apagar</a>
-                                </li>
-                                <hr>
-                                <li><a class="dropdown-item" href="{{-- route('projetos.ver', ['id' => $item->id]) --}}">Ver Anexos</a>
-                                </li>
-                                <li><a class="dropdown-item" href="{{-- route('projetos.ver', ['id' => $item->id]) --}}">Ver Comentarios</a>
-                                </li>
+                                @if (Session::get('s_idTipoUtilizador') == env('TIPO_TECNICO'))
+                                    @if ($item->verificado == 0)
+                                        <li><a class="dropdown-item"
+                                                href="{{ route('projetos.verificar', ['id' => Crypt::encrypt($item->id)]) }}">Autorizar</a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item"
+                                                wire:click="atribuirTecnico('{{ Crypt::encrypt($item->id) }}')">
+                                                Atribuir Técnico
+                                            </a>
+                                        </li>
+                                    @endif
+                                    <li><a class="dropdown-item">Comentar</a>
+                                    </li>
+                                @else
+                                    @if ($item->id_status == env('STATUS_DRAFT'))
+                                        <li><a class="dropdown-item"
+                                                href="{{ route('projetos.rever', ['id' => Crypt::encrypt($item->id)]) }}">Editar</a>
+                                        </li>
+                                    @else
+                                        <li><a class="dropdown-item" href="{{-- route('projetos.ver', ['id' => $item->id]) --}}">Ver</a>
+                                        </li>
+                                    @endif
+                                @endif
+
+
                             </ul>
                         </div>
                     </td>
@@ -67,6 +132,11 @@
                     </td>
                     <td>{{ $item->tipo_projeto }}</td>
                     <td>{{ $item->status }}</td>
+                    @if (Session::get('s_idTipoUtilizador') == env('TIPO_TECNICO'))
+                        <td>{{ $item->nome_investigador }}</td>
+                    @else
+                        <td>{{ $item->nome_tecnico ?? 'Ainda não atribuido' }}</td>
+                    @endif
                 </tr>
             @empty
                 <td colspan="7">Não tem dados</td>
@@ -75,3 +145,14 @@
     </table>
 
 </div>
+
+@section('script')
+    <script>
+        document.addEventListener('livewire:init', () => {
+            Livewire.on('open-modal', () => {
+                const modal = new bootstrap.Modal(document.getElementById('exampleModal'));
+                modal.show();
+            })
+        });
+    </script>
+@endsection

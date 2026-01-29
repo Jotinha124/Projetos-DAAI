@@ -45,7 +45,8 @@ return new class extends Migration
 
         //USER
         DB::table('users')->insert([
-            ['id' => 1, 'nome' => 'João Matias', 'email' => 'matiasjoaopedro19@gmail.com', 'password' => Hash::make('123456'), 'id_tipo_utilizador' => 1]
+            ['id' => 1, 'nome' => 'João Matias', 'email' => 'matiasjoaopedro19@gmail.com', 'password' => Hash::make('123456'), 'id_tipo_utilizador' => 1, 'admin' => false],
+            ['id' => 2, 'nome' => 'Tecnico', 'email' => 'joaomatiasdev@gmail.com', 'password' => Hash::make('123456'), 'id_tipo_utilizador' => 2, 'admin' => true],
         ]);
     }
 

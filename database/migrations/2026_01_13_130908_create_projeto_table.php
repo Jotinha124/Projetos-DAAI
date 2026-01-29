@@ -16,15 +16,14 @@ return new class extends Migration
             $table->string('projeto');
             $table->boolean('verificado')->default(false);
             $table->text('sumario');
-            $table->string('documento');
             $table->float('orcamento');
             $table->boolean('verificadopresidencia')->default(false);
 
-            $table->unsignedBigInteger('id_investigador')->nullable();
+            $table->unsignedBigInteger('id_investigador');
 
             $table->unsignedBigInteger('id_financiamento');
 
-            $table->unsignedBigInteger('id_tecnico_apoio');
+            $table->unsignedBigInteger('id_tecnico_apoio')->nullable();
 
             $table->unsignedBigInteger('id_status');
 

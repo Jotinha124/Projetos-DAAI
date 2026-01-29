@@ -71,6 +71,12 @@ class LoginController extends Controller
 
             Session::put('s_admin', $User->admin);
 
+            $TipoUtilizador = DB::table('tipo_utilizador')->where('id', $User->id_tipo_utilizador)->first();
+
+            Session::put('s_tipo_utilizador', $TipoUtilizador->tipo_utilizador);
+            Session::put('s_idTipoUtilizador', $User->id_tipo_utilizador);
+
+
             return redirect('dashboard');
         }else{
             session()->flash('mensagem_erro', 'Email or password inválidos!');

@@ -4,12 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Equipa extends Model
+class StatusUtilizador extends Model
 {
-    public $table = "equipa";
-    
+    public $table = "status_utilizador";
+
     public $fillable = [
-        'id_projeto',
-        'id_user'
+        'status'
     ];
 }

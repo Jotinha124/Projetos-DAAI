@@ -2,16 +2,12 @@
 
 namespace App\Http\Livewire\Projeto;
 
-use App\Http\Controllers\Logs;
-use App\Models\Financiamento;
 use App\Models\Projeto;
-use App\Models\TipoProjeto;
 use App\Services\Operations;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Session;
 use Livewire\Component;
 
-class VerificarProjeto extends Component
+class MeuProjeto extends Component
 {
     public $id;
     public $nomeProjeto;
@@ -22,12 +18,17 @@ class VerificarProjeto extends Component
     public $Financiamento;
     public $entidadesExternas;
     public $equipa;
+    public $logs;
 
     public function mount($id)
     {
         $id = Operations::decryptId($id);
 
-        $this->id = $id;
+        if(!$id){
+            session()->flash('mensagem_erro', 'Projeto não encontrado');
+
+            return redirect()->route('projetos');
+        }
 
         $Projeto = Projeto::find($id);
 
@@ -36,6 +37,8 @@ class VerificarProjeto extends Component
 
             return redirect()->route('projetos');
         }
+
+        $this->id = $id;
 
         $this->nomeProjeto = $Projeto->projeto;
         $this->sumario = $Projeto->sumario;
@@ -62,58 +65,26 @@ class VerificarProjeto extends Component
 
         $this->anexos = $Anexos;
 
-        //Equipa
+        //Equipa 
         $Equipa = DB::table('equipa')
             ->join('users', 'equipa.id_user', '=', 'users.id')
-            ->select('equipa.*', 'users.nome as nome_user', 'users.email as email_user', 'users.id as id_user')
+            ->select('equipa.*', 'users.nome as nome_user', 'users.email as email_user')
             ->where('id_projeto', $this->id)->get();
 
         $this->equipa = $Equipa;
-    }
 
-    public function verificar()
-    {
-        $Projeto = Projeto::find($this->id);
+        //Logs 
+        $Logs = DB::table('logs')
+            ->join('users', 'logs.id_user', '=', 'users.id')
+            ->join('status', 'logs.id_status', '=', 'status.id')
+            ->select('logs.*', 'users.nome as nome_user', 'status.status as logstatus')
+            ->where('id_projeto', $this->id)->get();
 
-        $Projeto->update([
-            'verificado' => 1,
-            'id_status' => env('STATUS_AUTORIZACAO', -1),
-        ]);
-
-        Logs::log(
-            $this->id,
-            Session::get('s_userId'),
-            env('STATUS_AUTORIZACAO', -1)
-        );
-
-        session()->flash('mensagem', 'Projeto verificado com sucesso');
-
-        return redirect()->route('projetos');
-    }
-
-    public function rejeitar()
-    {
-        $Projeto = Projeto::find($this->id);
-
-        $Projeto->update([
-            'verificado' => 0,
-            'id_status' => env('STATUS_REPROVADO', -1),
-            'updated_at' => date('Y-m-d H:i:s')
-        ]);
-
-        Logs::log(
-            $this->id,
-            Session::get('s_userId'),
-            env('STATUS_REPROVADO', -1)
-        );
-
-        session()->flash('mensagem', 'Projeto rejeitado com sucesso');
-
-        return redirect()->route('projetos');
+        $this->logs = $Logs;
     }
 
     public function render()
     {
-        return view('livewire.projeto.verificar-projeto')->extends('layouts.master');
+        return view('livewire.projeto.meu-projeto')->extends('layouts.master');
     }
 }

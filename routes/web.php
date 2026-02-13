@@ -3,7 +3,9 @@
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\HomeController;
 use App\Http\Livewire\Dashboard;
+use App\Http\Livewire\Projeto\ComentarProjeto;
 use App\Http\Livewire\Projeto\CriarProjeto;
+use App\Http\Livewire\Projeto\MeuProjeto;
 use App\Http\Livewire\Projeto\ReverProjeto;
 use App\Http\Livewire\Projeto\VerificarProjeto;
 use App\Http\Livewire\Projeto\VerProjeto;
@@ -49,10 +51,11 @@ Route::group(['middleware' => 'auth'], function () {
     //ROTAS PROJETOS
     Route::get('/projetos', VerProjeto::class)->name('projetos');
     Route::get('/projetos/rever/{id}', ReverProjeto::class)->name('projetos.rever');
-    Route::get('/projetos/ver/{id}', VerProjeto::class)->name('projetos.ver');
+    Route::get('/projetos/ver/{id}', MeuProjeto::class)->name('projetos.ver');
     Route::get('/projetos/criar', CriarProjeto::class)->name('projetos.criar');
     Route::get('/projetos/editar/{id}', CriarProjeto::class)->name('projetos.editar');
     Route::get('/projetos/verificar/{id}', VerificarProjeto::class)->name('projetos.verificar');
+    Route::get('/projetos/comentar/{id}', ComentarProjeto::class)->name('projetos.comentar');
 
     //ROTAS UTILIZADORES
     Route::get('/utilizadores', VerUtilizadores::class)->name('utilizadores');

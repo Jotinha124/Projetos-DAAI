@@ -18,6 +18,11 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->boolean('admin')->default(false);
+            $table->unsignedBigInteger('id_status_utilizador');
+
+            $table->foreign('id_status_utilizador')
+                ->references('id')
+                ->on('status_utilizador');
 
             $table->unsignedBigInteger('id_tipo_utilizador');
 

@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Projeto;
 
 use App\Http\Controllers\Logs;
 use App\Models\Anexo;
+use App\Models\Equipa;
 use App\Models\Log;
 use App\Models\Projeto;
 use App\Services\Operations;
@@ -22,6 +23,7 @@ class ReverProjeto extends Component
     public $entidadesexternas;
     public $Financiamento;
     public $anexos;
+    public $equipa;
 
     public $rever = false;
 
@@ -48,6 +50,8 @@ class ReverProjeto extends Component
         $this->Financiamento = $Projeto->id_financiamento;
 
         $this->renderAnexos();
+
+        $this->renderEquipa();
     }
 
     public function renderAnexos()
@@ -65,6 +69,35 @@ class ReverProjeto extends Component
     {
         $this->rever = true;
     }
+
+    public function renderEquipa()
+    {
+        $Equipa = DB::table('equipa')
+            ->join('users', 'equipa.id_user', '=', 'users.id')
+            ->select('equipa.*', 'users.nome as nome_user', 'users.email as email_user', 'users.id as id_user')
+            ->where('id_projeto', $this->id)->get();
+
+        $this->equipa = $Equipa;
+    }
+
+    public function removerMembro($id)
+    {
+        $id = Operations::decryptId($id);
+
+        if(!$id){
+            session()->flash('mensagem_erro', 'Projeto não encontrado');
+
+            return redirect()->route('projetos');
+        }
+
+        $Equipa = Equipa::where('id_projeto', $this->id)->where('id_user', $id)->first();
+
+        $Equipa->delete();
+
+        session()->flash('mensagem', 'Membro removido com sucesso');
+
+        $this->renderEquipa();
+    }   
 
     public function apagarFicheiro($id)
     {
@@ -119,6 +152,7 @@ class ReverProjeto extends Component
             'entidades_externas' => $this->entidadesexternas,
             'id_financiamento' => $this->Financiamento,
             'id_status' => env('STATUS_ENVIADO', -1),
+            'updated_at' => date('Y-m-d H:i:s')
         ]);
 
         Logs::log(

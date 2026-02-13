@@ -1,14 +1,11 @@
 @section('titulo')
-    Verificar Projetos
+    Ver Projeto
 @endsection
 <div>
-    <x-breadcrumb layer1="Projetos" layer2="Verificar Projetos" layer1route="projetos" />
-
-    <x-alertas />
-
-
+    <x-breadcrumb layer1="Projetos" layer2="Criar Projetos" layer1route="projetos" />
     <div class="card">
         <div class="card-body">
+            <x-alertas />
             <ul class="nav nav-tabs mb-3" id="projetoTabs" role="tablist">
                 <li class="nav-item" role="presentation">
                     <a class="nav-link active" id="projetos-tab" data-bs-toggle="tab" href="#projetos" role="tab"
@@ -22,6 +19,12 @@
                     <a class="nav-link" id="equipa-tab" data-bs-toggle="tab" href="#equipa" role="tab"
                         aria-controls="equipa" aria-selected="false">Equipa</a>
                 </li>
+                @if (Session::get('s_idTipoUtilizador') == env('TIPO_TECNICO'))
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link" id="logs-tab" data-bs-toggle="tab" href="#logs" role="tab"
+                            aria-controls="logs" aria-selected="false">Logs</a>
+                    </li>
+                @endif
             </ul>
             <div class="tab-content" id="projetoTabsContent">
                 {{-- Projetos --}}
@@ -108,18 +111,33 @@
                     @endforelse
                 </div>
 
-
-
-                <div style="overflow:auto;">
-                    <div style="float:right">
-                        <button type="submit" class="btn btn-danger" wire:click="rejeitar">
-                            Rejeitar
-                        </button>
-                        <button type="submit" class="btn btn-success" wire:click="verificar">
-                            Verificar Projeto
-                        </button>
+                {{-- Logs --}}
+                @if (Session::get('s_idTipoUtilizador') == env('TIPO_TECNICO'))
+                    <div class="tab-pane fade" id="logs" role="tabpanel" aria-labelledby="logs-tab">
+                        <div class="space-y-3">
+                            @forelse($logs as $item)
+                                <div
+                                    class="border rounded-lg shadow-sm p-4 hover:shadow-md transition duration-200 bg-white">
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span class="fw-semibold">{{ $item->logstatus ?? 'Log Sem Título' }}</span>
+                                        <span class="text-muted">
+                                            [{{ \Carbon\Carbon::parse($item->data)->format('d/m/Y') }}]
+                                        </span>
+                                    </div>
+                                    <div class="text-dark">
+                                        {{ $item->nome_user ?? 'Sem detalhes disponíveis.' }}
+                                    </div>
+                                </div>
+                            @empty
+                                <div class="text-center text-muted py-4 fst-italic">
+                                    Não existem Logs
+                                </div>
+                            @endforelse
+                        </div>
                     </div>
-                </div>
+                @endif
             </div>
+
         </div>
     </div>
+</div>

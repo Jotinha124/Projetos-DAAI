@@ -43,10 +43,17 @@ return new class extends Migration
             ['id' => 2, 'tipo_utilizador' => 'Técnico Apoio'],
         ]);
 
+        //STATUS UTILIZADOR
+        DB::table('status_utilizador')->insert([
+            ['id' => 1, 'status' => 'Ativo'],
+            ['id' => 2, 'status' => 'Bloqueado'],
+            ['id' => 3, 'status' => 'Pendente'],
+        ]);
+
         //USER
         DB::table('users')->insert([
-            ['id' => 1, 'nome' => 'João Matias', 'email' => 'matiasjoaopedro19@gmail.com', 'password' => Hash::make('123456'), 'id_tipo_utilizador' => 1, 'admin' => false],
-            ['id' => 2, 'nome' => 'Tecnico', 'email' => 'joaomatiasdev@gmail.com', 'password' => Hash::make('123456'), 'id_tipo_utilizador' => 2, 'admin' => true],
+            ['id' => 1, 'nome' => 'João Matias', 'email' => 'matiasjoaopedro19@gmail.com', 'password' => Hash::make('123456'), 'id_tipo_utilizador' => 1, 'admin' => false,'id_status_utilizador' => 1],
+            ['id' => 2, 'nome' => 'Tecnico', 'email' => 'joaomatiasdev@gmail.com', 'password' => Hash::make('123456'), 'id_tipo_utilizador' => 2, 'admin' => true, 'id_status_utilizador' => 1],
         ]);
     }
 

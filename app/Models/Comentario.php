@@ -10,7 +10,7 @@ class Comentario extends Model
     
     public $fillable = [
         'id_projeto',
-        'id_investigador',
+        'id_user',
         'comentario',
         'data'
     ];

@@ -59,11 +59,17 @@ class LoginController extends Controller
 
         $User = DB::table('users')->where('email', $email)->first();
 
+
         if (!$User) {
             session()->flash('mensagem_erro', 'Email or password inválidos!');
 
             return view('auth.login');
         }
+
+        if ($User->id_status_utilizador == env('UTILIZADOR_BLOQUEADO', -1) || $User->id_status_utilizador == env('UTILIZADOR_PENDENTE', -1)) {
+            abort(403);
+        }
+
         if (Auth::attempt($ModeloUser)) {
             Session::put('s_userId', $User->id);
 

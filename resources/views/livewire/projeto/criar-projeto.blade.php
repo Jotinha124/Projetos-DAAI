@@ -132,7 +132,103 @@
                 {{-- PASSO 3 --}}
                 @if ($passo === 3)
                     <h6>Equipa do Projeto</h6>
+                    <div class="row mb-4">
+                        <div class="col-6">
+                            <div class="col-md-12 mb-3">
+                                <label class="form-label">Investigador:</label>
+                                <div class="input-group mb-3">
+                                    <input type="email" name="email" id="email"
+                                        class="form-control @error('email') is-invalid @enderror"
+                                        placeholder="Escreva o email do investigador" wire:model.live="email">
+                                    <button class="btn btn-outline-secondary" wire:click="searchEmail" type="button"
+                                        id="button-addon2">Pesquisar</button>
+                                </div>
+                                @error('email')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+                            </div>
+                            <div class="col-md-12 mb-3">
+                                @if ($pesquisou)
+                                    {{-- CASO 1: Encontrou investigadores --}}
+                                    @if ($investigadores->count())
+                                        @foreach ($investigadores as $item)
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox"
+                                                    wire:click="addEquipa('{{ Crypt::encrypt($item->id) }}')"
+                                                    @if (collect($equipa)->pluck('email')->contains($item->email)) checked @endif>
+                                                {{ $item->nome }} ({{ $item->email }})
+                                            </div>
+                                        @endforeach
 
+                                        {{-- CASO 2: Não encontrou --}}
+                                    @else
+                                        <div class="col-md-12 mb-3">
+                                            <label class="form-label">Nome Utilizador:</label>
+                                            <input type="text"
+                                                class="form-control @error('nomeUtilizador') is-invalid @enderror"
+                                                wire:model="nomeUtilizador" placeholder="Nome do investigador">
+                                        </div>
+                                        @error('nomeUtilizador')
+                                            <div class="invalid-feedback">
+                                                {{ $message }}
+                                            </div>
+                                        @enderror
+
+                                        <div class="col-md-12 mb-3">
+                                            <label class="form-label">Email:</label>
+                                            <input type="text" class="form-control bg-light"
+                                                wire:model="emailInvestigador" readonly>
+                                        </div>
+
+                                        <a class="btn btn-primary" wire:click="addInvestigador">
+                                            Adicionar Investigador
+                                        </a>
+                                    @endif
+                                @endif
+
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="card shadow-sm border-0 rounded-4">
+                                <div class="card-body">
+                                    <h6 class="fw-bold mb-3">
+                                        <i class="bi bi-people-fill text-primary me-2"></i>
+                                        Equipa do Projeto
+                                    </h6>
+
+                                    @forelse($equipa as $item)
+                                        <div
+                                            class="d-flex justify-content-between align-items-center border rounded-3 p-3 mb-2 bg-light">
+
+                                            <div>
+                                                <div class="fw-semibold">
+                                                    {{ $item['nome'] }}
+                                                </div>
+                                                <small class="text-muted">
+                                                    {{ $item['email'] }}
+                                                </small>
+                                            </div>
+
+                                            <button class="btn btn-sm btn-outline-danger rounded-pill"
+                                                wire:click="removerMembro({{ Crypt::encrypt($item['id']) }})"
+                                                type="button">
+                                                Remover
+                                            </button>
+
+                                        </div>
+                                    @empty
+                                        <div class="text-center text-muted py-4">
+                                            <i class="bi bi-person-x fs-4 d-block mb-2"></i>
+                                            Sem membros na equipa.
+                                        </div>
+                                    @endforelse
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
                     <div style="overflow:auto;">
                         <div style="float:right;">
 
@@ -141,8 +237,15 @@
                             </button>
 
                             <button type="submit" class="btn btn-success" wire:loading.attr="disabled"
-                                wire:target="anexo, documento">
-                                Propor Projeto
+                                wire:target="addInvestigador">
+
+                                <span wire:loading.remove wire:target="addInvestigador">
+                                    Propor Projeto
+                                </span>
+
+                                <span wire:loading wire:target="addInvestigador">
+                                    Aguarde...
+                                </span>
                             </button>
                         </div>
                     </div>

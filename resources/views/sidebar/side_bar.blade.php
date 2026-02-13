@@ -43,6 +43,7 @@
 
         <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
             <li><a class="dropdown-item" href="{{-- route('perfil') --}}">Perfil</a></li>
+            <hr>
             <li><a class="dropdown-item" href="{{ route('logout') }}">Logout</a></li>
         </ul>
     </div>

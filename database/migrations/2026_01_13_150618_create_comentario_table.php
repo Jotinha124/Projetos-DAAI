@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('comentario', function (Blueprint $table) {
             $table->id();
             $table->string('comentario');
-            $table->date('data');
+            $table->dateTimeTz('data');
 
             $table->unsignedBigInteger('id_user');
 

@@ -9,7 +9,7 @@
     <div class="card">
         <div class="card-body">
             <x-alertas />
-            <form wire:submit="criarProjeto">
+            <form wire:submit="criarProjeto" enctype="multipart/form-data">
                 <h4>Criar Projeto:</h4>
                 {{-- PASSO 1 --}}
                 @if ($passo === 1)

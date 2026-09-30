@@ -32,7 +32,7 @@ class CriarProjeto extends Component
     public $documento;
     public $entidadesexternas;
     public $Financiamento;
-    public $anexo;
+    public $anexo = [];
     public $IdInvestigador;
     public $email;
 
@@ -65,7 +65,8 @@ class CriarProjeto extends Component
 
         if ($this->passo === 2) {
             return [
-                'anexo.*' => 'file|max:10240',
+                'anexo' => 'max:2',
+                'anexo.*' => 'required',
             ];
         }
 
@@ -108,6 +109,11 @@ class CriarProjeto extends Component
 
     public function criarProjeto()
     {
+        if (count($this->anexo) > 2) {
+            session()->flash('mensagem_erro', 'Só pode enviar no máximo 2 ficheiros.');
+            return;
+        }
+
         $this->passo = 3;
         // $this->validate();
 
@@ -161,12 +167,13 @@ class CriarProjeto extends Component
                             'id_tipo_utilizador' => env('TIPO_INVESTIGADOR', -1),
                             'data' => date('Y-m-d H:i:s'),
                             'admin' => 0,
-                            'password' => Hash::make($password)
+                            'password' => Hash::make($password),
+                            'id_status_utilizador' => env('UTILIZADOR_ATIVO', -1),
                         ]);
 
                         SendEmail::send($this->emailInvestigador, 'Envio de Login', 'Login');
                     }
-                    
+
                     $Equipa = Equipa::create([
                         'id_projeto' => $Projeto->id,
                         'id_user' => $User->id,
@@ -175,11 +182,11 @@ class CriarProjeto extends Component
             }
 
             //LOGS DO PROJETO
-            Logs::log(
-                $Projeto->id,
-                Session::get('s_userId'),
-                env('STATUS_DRAFT', -1)
-            );
+            // Logs::log(
+            //     $Projeto->id,
+            //     Session::get('s_userId'),
+            //     env('STATUS_DRAFT', -1)
+            // );
 
             session()->flash('mensagem_sucesso', 'Projeto criado com sucesso');
             return redirect()->route('projetos.rever', ['id' => Crypt::encrypt($Projeto->id)]);

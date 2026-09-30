@@ -1,64 +1,175 @@
-<<<<<<< HEAD
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Projetos — Plataforma de Gestão de Projetos de Investigação
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Trabalho final de **Desenvolvimento Avançado de Aplicações para Internet (DAAI)**
+Escola Superior de Tecnologia de Abrantes — Instituto Politécnico de Tomar
 
-## About Laravel
+**Autor:** João Matias (81983)
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Relatório
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+📄 **[Ver o relatório do projeto (PDF)](Relat%C3%B3rio%20de%20DAII.pdf)**
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+---
 
-## Learning Laravel
+## Índice
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+- [Relatório](#relatório)
+- [Tecnologias](#tecnologias)
+- [Funcionalidades](#funcionalidades)
+- [Estrutura do projeto](#estrutura-do-projeto)
+- [Instalação](#instalação)
+- [Referências](#referências)
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+---
 
-## Laravel Sponsors
+## Tecnologias
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+| Tecnologia | Utilização |
+|---|---|
+| [Laravel 12](https://laravel.com/) (PHP ^8.2) | Framework principal (MVC, Eloquent, rotas, migrations) |
+| [Livewire 3](https://livewire.laravel.com/) | Interfaces dinâmicas sem recarregar a página |
+| [Laravel UI](https://github.com/laravel/ui) + Bootstrap | Autenticação e componente visual |
+| [PHPMailer](https://github.com/PHPMailer/PHPMailer) | Envio de e-mails através de uma conta Gmail |
+| Vite + Node.js | Compilação dos assets (CSS/JS) |
+| MySQL | Base de dados |
 
-### Premium Partners
+## Funcionalidades
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+- **Autenticação** com dois tipos de utilizador: **Investigador** e **Técnico de Apoio**.
+- **Estado do utilizador** (ativo/inativo) — utilizadores inativos ficam impedidos de entrar.
+- **Gestão de utilizadores** — listar, criar e editar.
+- **Gestão de projetos** — criar, editar, rever, verificar e comentar projetos.
+- **Anexos** guardados num disco privado (`storage/app/public/documentos`) e servidos através de uma rota própria.
+- **Equipas** — um projeto pode ter vários investigadores.
+- **Comentários** e comunicação entre técnicos de apoio.
+- **Dashboard** personalizado para cada tipo de utilizador.
+- **Logs** das ações efetuadas e **notificações por e-mail**.
 
-## Contributing
+### Ciclo de vida de um projeto
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+```
+Draft ──► Enviado para autorização ──► Autorizado ──┬──► Iniciado ──┬──► Terminado
+                                                    │               └──► Reprovado
+                                                    └──► Cancelado
+```
 
-## Code of Conduct
+Os estados e tipos de utilizador são configurados no `.env` (ver [Variáveis de ambiente](#variáveis-de-ambiente-da-aplicação)).
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## Estrutura do projeto
 
-## Security Vulnerabilities
+```
+app/
+├── Http/
+│   ├── Controllers/        # Login, Home, SendEmail, Logs
+│   └── Livewire/
+│       ├── Dashboard.php
+│       ├── Projeto/        # CriarProjeto, EditarProjeto, VerProjeto, MeuProjeto,
+│       │                   # ReverProjeto, VerificarProjeto, ComentarProjeto
+│       └── Utilizador/     # CriarUtilizadores, EditarUtilizadores, VerUtilizadores
+└── Models/                 # User, Investigador, TecnicoApoio, Projeto, Anexo, Equipa,
+                            # Comentario, Financiamento, Log, Status, TipoProjeto, ...
+database/migrations/        # Estrutura completa da base de dados
+resources/views/livewire/   # Views Blade dos componentes Livewire
+routes/web.php              # Rotas da aplicação
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### Rotas principais
 
-## License
+| Rota | Descrição |
+|---|---|
+| `/login` | Autenticação |
+| `/dashboard` | Dashboard do utilizador |
+| `/projetos` | Lista de projetos |
+| `/projetos/criar` · `/projetos/editar/{id}` | Criar / editar projeto |
+| `/projetos/ver/{id}` · `/projetos/rever/{id}` | Ver / rever projeto |
+| `/projetos/verificar/{id}` · `/projetos/comentar/{id}` | Verificar / comentar projeto (Técnico de Apoio) |
+| `/utilizadores` · `/utilizadores/criar` · `/utilizadores/editar/{id}` | Gestão de utilizadores |
+| `/ficheiro/{id}` | Acesso a um anexo |
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
-=======
-# TrabalhoFinalDAAI-Laravel
-TrabalhoFinalDAAI-Laravel
->>>>>>> 3bff05824211ceb3cd8211556d4ace5e5932f6d9
+Todas as rotas exceto login, logout e ficheiro estão protegidas pelo middleware `auth`.
+
+---
+
+## Instalação
+
+### Requisitos
+
+- **PHP** 8.2 ou superior
+- **Composer** — [getcomposer.org/download](https://getcomposer.org/download/) (no Windows, descarregar e executar o `Composer-Setup.exe`)
+- **Node.js** — [nodejs.org/en/download](https://nodejs.org/en/download) (no Windows, usar o *Windows Installer (.msi)* e clicar em "Next" até concluir)
+- **MySQL** (opcionalmente uma ferramenta de administração como o [DBeaver](https://dbeaver.io/))
+
+Para confirmar que as ferramentas estão instaladas e no `PATH`:
+
+```bash
+php -v
+composer -v
+node -v
+```
+
+### Passo a passo
+
+1. **Obter o projeto** — clonar o repositório ou descompactar a pasta:
+   ```bash
+   git clone https://github.com/<utilizador>/TrabalhoFinalDAAI-Laravel.git
+   cd TrabalhoFinalDAAI-Laravel
+   ```
+2. **Criar a base de dados** no MySQL (apenas a base de dados vazia; guardar o nome para o passo seguinte).
+3. **Configurar o ambiente** — copiar o `.env.example` para `.env` e preencher as credenciais nos campos vazios (`DB_PORT`, `DB_DATABASE`, `DB_USERNAME`, `DB_PASSWORD`, e as credenciais de e-mail):
+   ```bash
+   cp .env.example .env
+   ```
+4. **Instalar as dependências** na raiz do projeto:
+   ```bash
+   composer install
+   npm install
+   ```
+5. **Gerar a chave da aplicação:**
+   ```bash
+   php artisan key:generate
+   ```
+6. **Criar as tabelas** da base de dados:
+   ```bash
+   php artisan migrate
+   ```
+7. **Compilar os assets:**
+   ```bash
+   npm run build
+   ```
+8. **Arrancar o servidor:**
+   ```bash
+   php artisan serve
+   ```
+   A aplicação fica disponível em <http://127.0.0.1:8000>.
+
+> Em alternativa, os passos 3 a 7 podem ser executados de uma só vez com `composer run setup` (depois de preencher o `.env`).
+
+### Variáveis de ambiente da aplicação
+
+Para além das configurações habituais do Laravel, a aplicação usa as seguintes variáveis no `.env`. Os valores têm de corresponder aos IDs dos registos nas tabelas `tipo_utilizador` e `status`:
+
+| Variável | Valor | Significado |
+|---|---|---|
+| `TIPO_INVESTIGADOR` | 1 | Tipo de utilizador Investigador |
+| `TIPO_TECNICO` | 2 | Tipo de utilizador Técnico de Apoio |
+| `STATUS_DRAFT` | 1 | Projeto em rascunho |
+| `STATUS_ENVIADO` | 2 | Projeto enviado |
+| `STATUS_ENVIADO_AUTORIZACAO` | 3 | Enviado para autorização |
+| `STATUS_AUTORIZACAO` | 4 | Autorizado |
+| `STATUS_INICIADO` | 5 | Iniciado |
+| `STATUS_TERMINADO` | 6 | Terminado |
+| `STATUS_REPROVADO` | 7 | Reprovado |
+| `STATUS_CANCELADO` | 8 | Cancelado |
+
+**E-mail (Gmail via SMTP):** preencher `MAIL_USERNAME` com a conta Gmail e `MAIL_PASSWORD` com uma [palavra-passe de aplicação](https://myaccount.google.com/apppasswords) da Google.
+
+---
+
+## Referências
+
+- <https://laravel.com/>
+- <https://livewire.laravel.com/>
+- <https://laravel.com/docs/12.x/mail>
+- <https://www.webappfix.com/post/how-to-send-mail-using-phpmailer-in-laravel.html>
+- <https://laracasts.com/>
+- <https://raviyatechnical.medium.com/laravel-12-bootstrap-5-auth-scaffolding-tutorial-with-laravel-ui-package-9ec9c640ffdc>

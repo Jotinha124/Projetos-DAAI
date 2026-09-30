@@ -111,8 +111,8 @@ node -v
 
 1. **Obter o projeto** — clonar o repositório ou descompactar a pasta:
    ```bash
-   git clone https://github.com/<utilizador>/TrabalhoFinalDAAI-Laravel.git
-   cd TrabalhoFinalDAAI-Laravel
+   git clone https://github.com/<utilizador>/Projetos-DAAI
+   cd Projetos-DAAI
    ```
 2. **Criar a base de dados** no MySQL (apenas a base de dados vazia; guardar o nome para o passo seguinte).
 3. **Configurar o ambiente** — copiar o `.env.example` para `.env` e preencher as credenciais nos campos vazios (`DB_PORT`, `DB_DATABASE`, `DB_USERNAME`, `DB_PASSWORD`, e as credenciais de e-mail):
